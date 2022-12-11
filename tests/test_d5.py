@@ -2,9 +2,9 @@ import pytest
 from ..d5 import solve_part1, solve_part2, read_body, read_header, reduce_body
 
 
-@pytest.fixture
-def sample_data():
-    return read_data("d4_sample.txt")
+# @pytest.fixture
+# def sample_data():
+#     return read_data("d4_sample.txt")
 
 
 def test_read_header():
@@ -21,8 +21,8 @@ def test_reduce_body():
 
 
 # def test_part1(sample_data):
-#     assert solve_part1(sample_data) == 2
+#     assert solve_part1(sample_data) == "CFFHVVHNC"
 
 
 # def test_part2(sample_data):
-#     assert solve_part2(sample_data) == 4
+#     assert solve_part2(sample_data) == "FSZWBPTBG"
