@@ -70,7 +70,7 @@ class Monkey:
 
 
 def solve_part1(monkeys: List[Monkey]):
-    for _ in range(10000):
+    for _ in range(20):
         for mon in monkeys:
             mon.turn()
     print(monkeys[0].items)
