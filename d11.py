@@ -10,12 +10,6 @@ def monkey_factory(data: List[str]):
     test = int(data[3].split()[-1])
     tru = int(data[4].split()[-1])
     fals = int(data[5].split()[-1])
-    # print(id)
-    # print(items)
-    # print(operator)
-    # print(test)
-    # print(tru)
-    # print(fals)
     return Monkey(
         id_num=id,
         items=items,
@@ -24,6 +18,13 @@ def monkey_factory(data: List[str]):
         true_target=tru,
         false_target=fals,
     )
+
+
+def prod(multis: List[int]):
+    product = 1
+    for num in multis:
+        product = product * num
+    return product
 
 
 @dataclass
@@ -37,32 +38,38 @@ class Monkey:
     items_inspected: int = 0
     list_of_monkeys: List = None
 
-    def inspect_item(self, item):
+    def inspect_item(self, item, part2=False):
         # start inspection by applying operation
         worry_level = self.apply_operation(item)
         # getting bored
-        worry_level = worry_level // 3
+        if not part2:
+            worry_level = worry_level // 3
         if worry_level % self.test == 0:
-            self.throw(worry_level, self.true_target)
+            self.throw(worry_level, self.true_target, part2)
         else:
-            self.throw(worry_level, self.false_target)
+            self.throw(worry_level, self.false_target, part2)
         self.items_inspected += 1
 
     def apply_operation(self, old):
+        # vaiable "old" is needed as part of the evaluated oparation"
         new = eval(self.operation)
         return new
 
-    def throw(self, level, target):
+    def throw(self, level, target, part2=False):
         self.items.pop(0)
-        self.list_of_monkeys[target].recieve_item(level)
+        self.list_of_monkeys[target].recieve_item(level, part2)
 
-    def recieve_item(self, item_wory_level):
-        self.items.append(item_wory_level)
+    def recieve_item(self, item_wory_level, part2=False):
+        divisor = [mon.test for mon in self.list_of_monkeys]
+        divisor = prod(divisor)
+        if part2:
+            self.items.append(item_wory_level % divisor)
+        else:
+            self.items.append(item_wory_level)
 
-    def turn(self):
-        # print(self.items)
+    def turn(self, part2=False):
         for item in self.items.copy():  # need to copy, otherwise "pop(0)" wont work
-            self.inspect_item(item)
+            self.inspect_item(item, part2)
 
     def join_list(self, monkey_list: List):
         monkey_list.append(self)
@@ -73,16 +80,23 @@ def solve_part1(monkeys: List[Monkey]):
     for _ in range(20):
         for mon in monkeys:
             mon.turn()
-    print(monkeys[0].items)
+
     inspected = [mon.items_inspected for mon in monkeys]
     inspected.sort()
 
     return inspected[-1] * inspected[-2]
 
 
-def solve_part2(data: List[int]):
+def solve_part2(monkeys: List[Monkey]):
+    for _ in range(10000):
+        for mon in monkeys:
+            mon.turn(part2=True)
+    # for mon in monkeys:
+    #     print(mon.items_inspected)
+    inspected = [mon.items_inspected for mon in monkeys]
+    inspected.sort()
 
-    return 0
+    return inspected[-1] * inspected[-2]
 
 
 def read_data(input_file: str):
@@ -105,8 +119,17 @@ def main():
 
     print("Solution Day 11, Part1:")
     print(solve_part1(monkeys))
-    # print("Solution Day 1, Part2:")
-    # print(solve_part2(data_clear))
+
+    temp = []
+    monkeys = []
+    data_clear = read_data("d11_input.txt")
+    for raw in data_clear:
+        temp.append(monkey_factory(raw))
+    for monkey in temp:
+        monkey.join_list(monkeys)
+
+    print("Solution Day 1, Part2:")
+    print(solve_part2(monkeys))
 
 
 if __name__ == "__main__":
