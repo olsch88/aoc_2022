@@ -41,26 +41,32 @@ def get_neighbours(maze: np.ndarray[Node], node: Node):
             node.neighbours.append(maze[node.y, node.x + 1])
 
 
-# def traverse_node(cur_node: Node, cur_length=0, lengths=None):
-#     """this is dfs, not bfs"""
-#     cur_node.visited = True
-#     length = cur_length
-#     cur_node.distance = min(cur_length, cur_node.distance)
-#     if cur_node.value == 27:  # End reached
-#         lengths.append(cur_length)
-#         # return cur_length
+def get_neighbours_part2(maze: np.ndarray[Node], node: Node):
+    """finding all possible destinations from a given node"""
+    if not node.y - 1 < 0:
+        neigh_val = maze[node.y - 1, node.x].value
+        if neigh_val >= node.value - 1:
+            node.neighbours.append(maze[node.y - 1, node.x])
+    if not node.y + 1 >= maze.shape[0]:
+        neigh_val = maze[node.y + 1, node.x].value
+        if neigh_val >= node.value - 1:
+            node.neighbours.append(maze[node.y + 1, node.x])
 
-#     for neigh in cur_node.neighbours:  # [::-1]:
-#         if not neigh.visited:
-#             length = traverse_node(neigh, cur_length=cur_length + 1, lengths=lengths)
-#     return  # length
+    if not node.x - 1 < 0:
+        neigh_val = maze[node.y, node.x - 1].value
+        if neigh_val >= node.value - 1:
+            node.neighbours.append(maze[node.y, node.x - 1])
+    if not node.x + 1 >= maze.shape[1]:
+        neigh_val = maze[node.y, node.x + 1].value
+        if neigh_val >= node.value - 1:
+            node.neighbours.append(maze[node.y, node.x + 1])
 
 
 # adaptiong an example found online:
 def bfs(
     # maze: np.ndarray[Node],
     start_node: Node,
-    target_node: Node,
+    target_node: Node = None,
 ):
 
     queue: List[Node] = []  # Initialize a queue
@@ -73,8 +79,9 @@ def bfs(
         next_node = queue.pop(0)
         distance = next_node.distance
         # print(next_node)
-        if next_node == target_node:
-            return distance
+        if target_node:
+            if next_node == target_node:
+                return distance
         for neigh in next_node.neighbours:
             if not neigh.visited:
                 neigh.distance = distance + 1
@@ -85,7 +92,7 @@ def bfs(
 def solve_part1(data: np.ndarray[Node]):
     for i in range(data.shape[0]):
         for j in range(data.shape[1]):
-            get_neighbours(data, data[i, j])
+
             if data[i, j].value == heights["S"]:
                 start_node = data[i, j]
                 start_node.value = heights["a"]
@@ -93,13 +100,30 @@ def solve_part1(data: np.ndarray[Node]):
             if data[i, j].value == heights["E"]:
                 end_node = data[i, j]
                 end_node.value = heights["z"]
+            get_neighbours(data, data[i, j])
 
     return bfs(start_node, end_node)
 
 
-def solve_part2(data: List[int]):
+def solve_part2(data: np.ndarray[Node]):
+    for i in range(data.shape[0]):
+        for j in range(data.shape[1]):
+            if data[i, j].value == heights["S"]:
+                node_S = data[i, j]
+                node_S.value = heights["a"]
 
-    return 0
+            if data[i, j].value == heights["E"]:
+                node_E = data[i, j]
+                node_E.value = heights["z"]
+            get_neighbours_part2(data, data[i, j])
+    bfs(node_E)
+    distances = []
+    for i in range(data.shape[0]):
+        for j in range(data.shape[1]):
+            if data[i, j].value == heights["a"]:
+                distances.append(data[i, j].distance)
+
+    return min(distances)
 
 
 def read_data(input_file: str):
@@ -117,15 +141,16 @@ def read_data(input_file: str):
 
 
 def main():
-
-    data_clear = read_data("d12_input.txt")
+    # creating to clean copys for both parts
+    data_clear_part1 = read_data("d12_input.txt")
+    data_clear_part2 = read_data("d12_input.txt")
 
     print("Solution Day 12, Part1:")
-    print(solve_part1(data_clear))
+    print(solve_part1(data_clear_part1))
     # 2118 is to high
 
     print("Solution Day 12, Part2:")
-    print(solve_part2(data_clear))
+    print(solve_part2(data_clear_part2))
 
 
 if __name__ == "__main__":
