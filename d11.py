@@ -123,12 +123,13 @@ def main():
     temp = []
     monkeys = []
     data_clear = read_data("d11_input.txt")
+
     for raw in data_clear:
         temp.append(monkey_factory(raw))
     for monkey in temp:
         monkey.join_list(monkeys)
 
-    print("Solution Day 1, Part2:")
+    print("Solution Day 11, Part2:")
     print(solve_part2(monkeys))
 
 

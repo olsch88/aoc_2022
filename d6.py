@@ -29,7 +29,7 @@ def main():
 
     print("Solution Day 6, Part1:")
     print(solve_part1(data_clear))
-    print("Solution Day 6*, Part2:")
+    print("Solution Day 6, Part2:")
     print(solve_part2(data_clear))
 
 
