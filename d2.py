@@ -92,9 +92,9 @@ def main():
 
     data_clear = read_data("d2_input.txt")
 
-    print("Solution Day 1, Part1:")
+    print("Solution Day 2, Part1:")
     print(solve_part1(data_clear))
-    print("Solution Day 1, Part2:")
+    print("Solution Day 2, Part2:")
     print(solve_part2(data_clear))
 
 
