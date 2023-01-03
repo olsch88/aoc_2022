@@ -11,6 +11,9 @@ def get_monkeys(data: List[str]):
 
 
 def solve_part1(data: List[str]):
+    """
+    this is a kind of brute-foce solution.
+    I'm not totally happy with it, but it works"""
     monkeys = get_monkeys(data)
     known: dict[str, int] = {}
     unknown: dict[str, str] = {}
@@ -42,7 +45,6 @@ def get_equation(name: str, monkeys: dict[str:str]):
     equation = name
     changed = True
     while changed:
-
         changed = False
         for mon in monkeys.keys():
             if mon in equation:
@@ -79,9 +81,10 @@ def solve_part2(data: List[str]):
     right_eq = right_eq.replace(str(start_num), "humn")
 
     right_sol = eval(right_eq)
-    minimum = 10**12
+
     best_humn = 10**12
     for mag in range(11, -1, -1):
+        minimum = 10**15
         for i in range(
             best_humn - 2 * 10 ** (mag + 2), best_humn + 2 * 10 ** (mag + 2), 10**mag
         ):
@@ -93,6 +96,8 @@ def solve_part2(data: List[str]):
                 minimum = calc
                 best_humn = i
                 # print(calc)
+            elif calc > minimum:
+                break
             if calc <= 0.1:
                 return i
 
@@ -113,9 +118,12 @@ def main():
     start = time.perf_counter()
     print("Solution Day 21, Part1:")
     print(solve_part1(data_clear))
+    print(f"Runtime Part 1: {time.perf_counter() - start}")
+
+    start = time.perf_counter()
     print("Solution Day 21, Part2:")
     print(solve_part2(data_clear))
-    print(time.perf_counter() - start)
+    print(f"Runtime Part 2: {time.perf_counter() - start}")
 
 
 if __name__ == "__main__":
