@@ -29,7 +29,6 @@ def dec_to_snafu(dec: int) -> str:
         if div == 0:
             break
         dec = div
-
     return snafu
 
 
